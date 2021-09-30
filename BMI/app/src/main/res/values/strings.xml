@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BMI</string>
+    <string name="has_BMI">má BMI</string>
 </resources>

@@ -2,6 +2,8 @@ package com.example.bmi;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.icu.number.Precision;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +18,12 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
-
     EditText editTextName;
     EditText editTextWeight;
     EditText editTextHeight;
 
     TextView textViewResult;
+    TextView textViewBottom;
 
     Button buttonBMI;
 
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         editTextHeight = findViewById(R.id.editTextHeight);
 
         textViewResult = findViewById(R.id.textViewResult);
+        textViewBottom = findViewById(R.id.textViewBottom);
 
         buttonBMI = findViewById(R.id.buttonBMI);
 
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         imageViewSad.setImageAlpha(10);
 
         buttonBMI.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
                 double BMI = 0;
@@ -68,18 +72,27 @@ public class MainActivity extends AppCompatActivity {
                         textViewResult.setText(editTextName.getText().toString() + " má BMI: "
                                 + dec.format(BMI));
 
+                        textViewBottom.setText("Kategorie: normální");
+                        textViewBottom.setTextColor(Color.GREEN);
+
                     }
                     else if(BMI > maxBMI){
                         imageViewSmile.setImageAlpha(10);
                         imageViewSad.setImageAlpha(255);
                         textViewResult.setText(editTextName.getText().toString() + " má BMI: "
                                 + dec.format(BMI));
+
+                        textViewBottom.setText("Kategorie: Nadváha");
+                        textViewBottom.setTextColor(Color.RED);
                     }
                     else{
                         imageViewSmile.setImageAlpha(10);
                         imageViewSad.setImageAlpha(255);
                         textViewResult.setText(editTextName.getText().toString() + " má BMI: "
                                 + dec.format(BMI));
+
+                        textViewBottom.setText("Kategorie: podváha");
+                        textViewBottom.setTextColor(Color.RED);
                     }
 
                     InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
@@ -89,14 +102,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Zadejte platnou váhu a výšku", Toast.LENGTH_SHORT).show();
 
                 }
-
-
             }
         });
-
-
-
-
     }
 
     public double calculateBMI(double weight, double height){
