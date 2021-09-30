@@ -29,6 +29,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String login = editText.getText().toString();
+                Toast.makeText(MainActivity.this, login, Toast.LENGTH_LONG).show();
+                Log.d("loginClick",login);
+
+                Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                intent.putExtra("login", login);
+
+                startActivity(intent);
             }
         });
     }
