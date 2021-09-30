@@ -99,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
                 }catch (Exception e){
-                    Toast.makeText(MainActivity.this, "Zadejte platnou váhu a výšku", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Zadejte platnou váhu a výšku",
+                                    Toast.LENGTH_SHORT).show();
 
                 }
             }
