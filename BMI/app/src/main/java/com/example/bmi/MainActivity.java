@@ -1,11 +1,16 @@
 package com.example.bmi;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.icu.number.Precision;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -112,4 +117,40 @@ public class MainActivity extends AppCompatActivity {
 
         return BMI;
     }
+
+    public void createIntent(Context packageContext, Class<?> cls ){
+        Intent intent = new Intent(packageContext, cls);
+
+        startActivity(intent);
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.info:
+                createIntent(this, InfoActivity.class);
+                return true;
+            case R.id.history:
+                return true;
+            case R.id.options:
+                return true;
+            case R.id.clear:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+
+
+
 }
