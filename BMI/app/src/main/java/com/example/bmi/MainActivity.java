@@ -1,9 +1,11 @@
 package com.example.bmi;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String NAME = "name";
     public static final String WEIGHT = "weight";
     public static final String HEIGHT = "height";
-
+    public static final String OPTIONS = "options";
+    public static final int SECOND_ACTIVITY = 1;
 
     EditText editTextName;
     EditText editTextWeight;
@@ -47,10 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
     DecimalFormat dec = new DecimalFormat("#0.00");
 
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences = getSharedPreferences(BMI_VALUES, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         editTextName = findViewById(R.id.editTextName);
         editTextWeight = findViewById(R.id.editTextWeight);
@@ -68,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         imageViewSad.setImageAlpha(10);
 
         loadData();
+        loadOptions();
 
         buttonBMI.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -136,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveData(){
-        SharedPreferences sharedPreferences = getSharedPreferences("BMIValues", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
         editor.putString(NAME, editTextName.getText().toString());
         editor.putString(WEIGHT, editTextWeight.getText().toString());
         editor.putString(HEIGHT, editTextHeight.getText().toString());
@@ -146,13 +153,21 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public void loadData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(BMI_VALUES, Context.MODE_PRIVATE);
+    public void loadOptions(){
+        if(sharedPreferences.getInt(OPTIONS, -1) == 0){
+            imageViewSmile.setImageResource(R.drawable.smile);
+            imageViewSad.setImageResource(R.drawable.sad);
+        }
+        else if(sharedPreferences.getInt(OPTIONS, -1) == 1){
+            imageViewSad.setImageResource(R.drawable.sad2);
+            imageViewSmile.setImageResource(R.drawable.smile2);
+        }
+    }
 
+    public void loadData(){
         editTextName.setText(sharedPreferences.getString(NAME, ""));
         editTextWeight.setText(sharedPreferences.getString(WEIGHT, ""));
         editTextHeight.setText(sharedPreferences.getString(HEIGHT, ""));
-
     }
 
 
@@ -171,6 +186,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.history:
                 return true;
             case R.id.options:
+
+                int LAUNCH_SECOND_ACTIVITY = 1;
+                Intent i = new Intent(this, OptionsActivity.class);
+                startActivityForResult(i, LAUNCH_SECOND_ACTIVITY);
                 return true;
             case R.id.clear:
                 return true;
@@ -180,7 +199,31 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == SECOND_ACTIVITY){
+            if(resultCode == Activity.RESULT_OK){
+                int result = data.getIntExtra("result", -1);
 
+                if(result == 0){
+                    imageViewSmile.setImageResource(R.drawable.smile);
+                    imageViewSad.setImageResource(R.drawable.sad);
 
+                }
+                else if(result == 1){
+                    imageViewSad.setImageResource(R.drawable.sad2);
+                    imageViewSmile.setImageResource(R.drawable.smile2);
+                }
+
+                editor.putInt(OPTIONS, result);
+                editor.apply();
+            }
+        }
+        if(resultCode == Activity.RESULT_CANCELED){
+
+        }
+
+    }
 }
