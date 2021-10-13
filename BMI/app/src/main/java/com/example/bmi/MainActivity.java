@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.icu.number.Precision;
 import android.os.Bundle;
@@ -22,6 +23,12 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String BMI_VALUES = "BMIValues";
+    public static final String NAME = "name";
+    public static final String WEIGHT = "weight";
+    public static final String HEIGHT = "height";
+
 
     EditText editTextName;
     EditText editTextWeight;
@@ -59,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         imageViewSmile.setImageAlpha(10);
         imageViewSad.setImageAlpha(10);
+
+        loadData();
 
         buttonBMI.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -108,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                 }
+                saveData();
             }
         });
     }
@@ -122,6 +132,26 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(packageContext, cls);
 
         startActivity(intent);
+
+    }
+
+    public void saveData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("BMIValues", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(NAME, editTextName.getText().toString());
+        editor.putString(WEIGHT, editTextWeight.getText().toString());
+        editor.putString(HEIGHT, editTextHeight.getText().toString());
+
+        editor.apply();
+    }
+
+    public void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences(BMI_VALUES, Context.MODE_PRIVATE);
+
+        editTextName.setText(sharedPreferences.getString(NAME, ""));
+        editTextWeight.setText(sharedPreferences.getString(WEIGHT, ""));
+        editTextHeight.setText(sharedPreferences.getString(HEIGHT, ""));
 
     }
 
