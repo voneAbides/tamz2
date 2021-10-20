@@ -1,5 +1,7 @@
 package com.example.bmi;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.icu.number.Precision;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String WEIGHT = "weight";
     public static final String HEIGHT = "height";
     public static final String OPTIONS = "options";
+    public static final String RESULT = "result";
+    public static final String HISTORY = "history";
     public static final int SECOND_ACTIVITY = 1;
 
     EditText editTextName;
@@ -47,11 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
     double maxBMI = 24.9;
     double minBMI = 18.5;
+    double BMI;
 
     DecimalFormat dec = new DecimalFormat("#0.00");
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
+    Set<String> history;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(BMI_VALUES, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+        history = sharedPreferences.getStringSet(HISTORY, new HashSet<>());
 
         editTextName = findViewById(R.id.editTextName);
         editTextWeight = findViewById(R.id.editTextWeight);
@@ -83,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                double BMI = 0;
+                BMI = 0;
 
                 try {
                     BMI = calculateBMI(Double.parseDouble(editTextWeight.getText().toString()),
@@ -142,13 +156,22 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(packageContext, cls);
 
         startActivity(intent);
-
     }
 
     public void saveData(){
         editor.putString(NAME, editTextName.getText().toString());
         editor.putString(WEIGHT, editTextWeight.getText().toString());
         editor.putString(HEIGHT, editTextHeight.getText().toString());
+
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("E, d MMM y, HH:mm");
+        Log.d("MyTime", formatter.format(date));
+
+        String historyRow = dec.format(BMI) + " " + editTextName.getText().toString() + " " + formatter.format(date);
+
+        history.add(historyRow);
+
+        editor.putStringSet(HISTORY, history);
 
         editor.apply();
     }
@@ -170,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
         editTextHeight.setText(sharedPreferences.getString(HEIGHT, ""));
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -184,14 +206,17 @@ public class MainActivity extends AppCompatActivity {
                 createIntent(this, InfoActivity.class);
                 return true;
             case R.id.history:
+                createIntent(this, HistoryActivity.class);
                 return true;
             case R.id.options:
-
-                int LAUNCH_SECOND_ACTIVITY = 1;
                 Intent i = new Intent(this, OptionsActivity.class);
-                startActivityForResult(i, LAUNCH_SECOND_ACTIVITY);
+                startActivityForResult(i, SECOND_ACTIVITY);
                 return true;
             case R.id.clear:
+                history.clear();
+                editor.putStringSet(HISTORY, history);
+
+                editor.apply();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -205,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == SECOND_ACTIVITY){
             if(resultCode == Activity.RESULT_OK){
-                int result = data.getIntExtra("result", -1);
+                int result = data.getIntExtra(RESULT, -1);
 
                 if(result == 0){
                     imageViewSmile.setImageResource(R.drawable.smile);
@@ -226,4 +251,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }

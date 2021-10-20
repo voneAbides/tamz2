@@ -1,5 +1,7 @@
 package com.example.bmi;
 
+import static com.example.bmi.MainActivity.RESULT;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -25,7 +27,7 @@ public class OptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", 0);
+                returnIntent.putExtra(RESULT, 0);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
@@ -35,7 +37,7 @@ public class OptionsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("result", 1);
+                returnIntent.putExtra(RESULT, 1);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
