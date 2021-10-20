@@ -110,12 +110,101 @@ public class BarcodeView extends View {
         trPaint.setTextSize(30);
         trPaint.setAntiAlias(true);
 
-        canvas.drawLine(0, 0, BARCODE_WIDTH, BARCODE_HEIGHT, tbPaint);
-        canvas.drawLine(0, BARCODE_HEIGHT, BARCODE_WIDTH, 0, tbPaint);
+//        canvas.drawLine(0, 0, BARCODE_WIDTH, BARCODE_HEIGHT, tbPaint);
+//        canvas.drawLine(0, BARCODE_HEIGHT, BARCODE_WIDTH, 0, tbPaint);
+//
+//        canvas.drawText("Zde bude čárový kód", (int)(BARCODE_WIDTH * 0.3), (int)(BARCODE_HEIGHT * 0.95), trPaint);
 
-        canvas.drawText("Zde bude čárový kód", (int)(BARCODE_WIDTH * 0.3), (int)(BARCODE_HEIGHT * 0.95), trPaint);
 
+        int counter = 0;
+        int x = 0;
+
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+        x += BARCODE_LINE_WIDTH;
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, twPaint);
+        x += BARCODE_LINE_WIDTH;
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+        x += BARCODE_LINE_WIDTH;
+
+        for ( int number : code
+             ) {
+
+            if(counter == 6){
+                canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+                x += BARCODE_LINE_WIDTH;
+                canvas.drawLine(x, 0, x, BARCODE_HEIGHT, twPaint);
+                x += BARCODE_LINE_WIDTH;
+                canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+                x += BARCODE_LINE_WIDTH;
+            }
+            else if(counter <= 6){
+                for(int i = 6; i >= 0; i--){
+                    if( (L[number] & (1 << i)) != 0 ){
+
+                        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, tbPaint);
+                    }
+
+                    else{
+                        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, twPaint);
+                    }
+                    x += BARCODE_LINE_WIDTH;
+
+                }
+                x += BARCODE_LINE_WIDTH;
+
+            }
+            else{
+                for(int i = 6; i >= 0; i--){
+                    if( (R[number] & (1 << i)) != 0 ){
+
+                        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, tbPaint);
+                    }
+
+                    else{
+                        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, twPaint);
+                    }
+                    x += BARCODE_LINE_WIDTH;
+                }
+                x += BARCODE_LINE_WIDTH;
+            }
+            counter++;
+        }
+
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+        x += BARCODE_LINE_WIDTH;
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, twPaint);
+        x += BARCODE_LINE_WIDTH;
+        canvas.drawLine(x, 0, x, BARCODE_HEIGHT, trPaint);
+        x += BARCODE_LINE_WIDTH;
+
+//        if( number & (1 << i) ){
+//
+//
+//        }
+//
+//        else{
+//            return false;
+//        }
+//
+//
+//    }
+//
+// int one = 1;
+//    private void printNumber(int number){
+//
+//        for(int i = 0; i < 7; i++){
+//            if( (number & (1 << i)) == 1 ){
+//
+//                canvas.drawLine(0, BARCODE_HEIGHT, BARCODE_WIDTH, 0, tbPaint);
+//            }
+//
+//            else{
+//                return false;
+//            }
+//        }
+//
     }
+
 
 
 }
