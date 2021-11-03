@@ -1,12 +1,15 @@
 package com.vsb.kru13.sokoban;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 /**
  * Created by kru13 on 12.10.16.
@@ -21,12 +24,28 @@ public class SokoView extends View{
     int width;
     int height;
 
+    int heroX = 6;
+    int heroY = 4;
+
     private int level[] = {
             1,1,1,1,1,1,1,1,1,0,
             1,0,0,0,0,0,0,0,1,0,
             1,0,2,3,3,2,1,0,1,0,
             1,0,1,3,2,3,2,0,1,0,
             1,0,2,3,3,2,4,0,1,0,
+            1,0,1,3,2,3,2,0,1,0,
+            1,0,2,3,3,2,1,0,1,0,
+            1,0,0,0,0,0,0,0,1,0,
+            1,1,1,1,1,1,1,1,1,0,
+            0,0,0,0,0,0,0,0,0,0
+    };
+
+    private int levelClear[] = {
+            1,1,1,1,1,1,1,1,1,0,
+            1,0,0,0,0,0,0,0,1,0,
+            1,0,2,3,3,2,1,0,1,0,
+            1,0,1,3,2,3,2,0,1,0,
+            1,0,2,3,3,2,0,0,1,0,
             1,0,1,3,2,3,2,0,1,0,
             1,0,2,3,3,2,1,0,1,0,
             1,0,0,0,0,0,0,0,1,0,
@@ -59,6 +78,99 @@ public class SokoView extends View{
         bmp[4] = BitmapFactory.decodeResource(getResources(), R.drawable.hero);
         bmp[5] = BitmapFactory.decodeResource(getResources(), R.drawable.boxok);
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        float screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        float screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+
+        switch(event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+
+                float xP = event.getX();
+                float yP = event.getY();
+                int lastHeroPos = heroY * 10 + heroX;
+
+                //right
+                if (xP > screenWidth / 1.5 && yP > screenHeight / 4) {
+                    if (level[heroY * 10 + heroX + 1] == 0 || level[heroY * 10 + heroX + 1] == 3) {
+
+                        level[heroY * 10 + heroX + 1] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroX++;
+
+                    } else if ((level[heroY * 10 + heroX + 1] == 2) &&
+                            (level[heroY * 10 + heroX + 2] == 0 || level[heroY * 10 + heroX + 2] == 3)) {
+
+                        level[heroY * 10 + heroX + 2] = 2;
+                        level[heroY * 10 + heroX + 1] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroX++;
+                    }
+                }
+
+                //left
+                else if (xP < screenWidth / 2.5 && yP > screenHeight / 4) {
+                    if (level[heroY * 10 + heroX - 1] == 0 || level[heroY * 10 + heroX - 1] == 3) {
+
+                        level[heroY * 10 + heroX - 1] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroX--;
+
+                    } else if ((level[heroY * 10 + heroX - 1] == 2) &&
+                            (level[heroY * 10 + heroX - 2] == 0 || level[heroY * 10 + heroX - 2] == 3)) {
+
+                        level[heroY * 10 + heroX - 2] = 2;
+                        level[heroY * 10 + heroX - 1] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroX--;
+                    }
+                }
+
+                //top
+                else if (yP < screenHeight / 4) {
+                    if (level[(heroY - 1) * 10 + heroX] == 0 || level[(heroY - 1) * 10 + heroX] == 3) {
+
+                        level[(heroY - 1) * 10 + heroX] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroY--;
+
+                    } else if ((level[(heroY - 1) * 10 + heroX] == 2) &&
+                            (level[(heroY - 2) * 10 + heroX] == 0 || level[(heroY - 2) * 10 + heroX] == 3)) {
+
+                        level[(heroY - 2) * 10 + heroX] = 2;
+                        level[(heroY - 1) * 10 + heroX] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroY--;
+                    }
+                }
+
+                //bottom
+                else if (yP > screenHeight / 1.5) {
+                    if (level[(heroY + 1) * 10 + heroX] == 0 || level[(heroY + 1) * 10 + heroX] == 3) {
+
+                        level[(heroY + 1) * 10 + heroX] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroY++;
+
+                    } else if ((level[(heroY + 1) * 10 + heroX] == 2) &&
+                            (level[(heroY + 2) * 10 + heroX] == 0 || level[(heroY + 2) * 10 + heroX] == 3)) {
+
+                        level[(heroY + 2) * 10 + heroX] = 2;
+                        level[(heroY + 1) * 10 + heroX] = 4;
+                        level[heroY * 10 + heroX] = 0;
+                        heroY++;
+                    }
+                }
+                if (levelClear[lastHeroPos] == 3 && lastHeroPos != heroY * 10 + heroX) {
+
+                    level[lastHeroPos] = 3;
+                }
+                invalidate();
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
