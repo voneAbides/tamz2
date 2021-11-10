@@ -81,6 +81,10 @@ public class SokoView extends View{
 
     }
 
+    public void setLevel(int[] level){
+        this.level = level;
+        invalidate();
+    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -112,8 +116,6 @@ public class SokoView extends View{
 
                         if(levelClear[heroY * 10 + heroX + 1] == 3){
                             level[heroY * 10 + heroX + 1] = 5;
-
-
                         }
                     }
                 }
@@ -136,8 +138,6 @@ public class SokoView extends View{
 
                         if(levelClear[heroY * 10 + heroX - 1] == 3){
                             level[heroY * 10 + heroX - 1] = 5;
-
-
                         }
                     }
                 }
@@ -160,8 +160,6 @@ public class SokoView extends View{
 
                         if(levelClear[(heroY - 1) * 10 + heroX] == 3){
                             level[(heroY - 1) * 10 + heroX] = 5;
-
-
                         }
                     }
                 }
@@ -188,6 +186,7 @@ public class SokoView extends View{
                         }
                     }
                 }
+
                 if (levelClear[lastHeroPos] == 3 && lastHeroPos != heroY * 10 + heroX) {
 
                     level[lastHeroPos] = 3;
@@ -202,8 +201,6 @@ public class SokoView extends View{
                         Toast.makeText(getContext(), "Level completed!", Toast.LENGTH_LONG).show();
 
                     }
-                    Log.i("Counter", "Counter: " + levelCounter);
-
                     levelCounter++;
                 }
                 invalidate();
@@ -227,6 +224,5 @@ public class SokoView extends View{
                         new Rect(j*width, i*height,(j+1)*width, (i+1)*height), null);
             }
         }
-
     }
 }
