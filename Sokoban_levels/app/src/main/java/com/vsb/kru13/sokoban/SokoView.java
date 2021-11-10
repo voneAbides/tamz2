@@ -19,8 +19,8 @@ public class SokoView extends View{
 
     Bitmap[] bmp;
 
-    int lx = 10;
-    int ly = 10;
+    int lx = 8;
+    int ly = 8;
 
     int width;
     int height;
@@ -220,7 +220,7 @@ public class SokoView extends View{
 
         for (int i = 0; i < lx; i++) {
             for (int j = 0; j < ly; j++) {
-                canvas.drawBitmap(bmp[level[i*10 + j]], null,
+                canvas.drawBitmap(bmp[level[i*8 + j]], null,
                         new Rect(j*width, i*height,(j+1)*width, (i+1)*height), null);
             }
         }
