@@ -80,10 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
         while(scanner.hasNextLine()) {
             String line = scanner.nextLine();
-
+            Log.i("lineLength", String.valueOf(line.length()));
             if(line.contains("Level")){
                if(oneLevel.capacity() != 0 && !line.contains("Level 1")){
-                   levelArray = new int[oneLevel.length()];
+                   levelArray = new int[oneLevel.length() + 1];
                    for (int i = 0; i < oneLevel.length(); i++) {
                         levelArray[i] = symbols.get(oneLevel.charAt(i));
                    }

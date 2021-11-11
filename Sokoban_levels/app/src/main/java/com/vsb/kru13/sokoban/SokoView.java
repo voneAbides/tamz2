@@ -19,8 +19,8 @@ public class SokoView extends View{
 
     Bitmap[] bmp;
 
-    int lx = 8;
-    int ly = 8;
+    int lx = 7;
+    int ly = 10;
 
     int width;
     int height;
