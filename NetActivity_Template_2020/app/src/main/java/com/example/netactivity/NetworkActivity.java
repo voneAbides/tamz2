@@ -230,7 +230,6 @@ public class NetworkActivity extends Activity {
                 stream.close();
             }
         }
-
         return entries;
     }
 
