@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LevelAcrivity"
+            android:name=".LevelsList"
+            android:exported="false" />
+        <activity
+            android:name=".LevelActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

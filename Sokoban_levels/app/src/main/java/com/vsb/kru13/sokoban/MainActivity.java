@@ -24,12 +24,16 @@ public class MainActivity extends AppCompatActivity {
 
     HashMap<Character, Integer> symbols = new HashMap<>();
     List<int[]> parsedLevels;
+    Map<Integer, List<Integer>> widthHeight;
+
 
     SokoView sokoview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        widthHeight = new HashMap<>();
 
         symbols.put(' ', 0);
         symbols.put('#', 1);
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream input;
         String levelsString = "";
         ArrayList<int[]> levels = new ArrayList<>();
+
         int[] levelArray;
 
         try {
@@ -78,21 +83,34 @@ public class MainActivity extends AppCompatActivity {
         Scanner scanner = new Scanner(levelsString);
         StringBuilder oneLevel = new StringBuilder();
 
+        int levelCounter = 1;
         while(scanner.hasNextLine()) {
             String line = scanner.nextLine();
             Log.i("lineLength", String.valueOf(line.length()));
             if(line.contains("Level")){
                if(oneLevel.capacity() != 0 && !line.contains("Level 1")){
-                   levelArray = new int[oneLevel.length() + 1];
+                   levelArray = new int[oneLevel.length()];
+
+                   oneLevel.deleteCharAt(oneLevel.length() - 1);
+                   String[] splitLevelsString = oneLevel.toString().split("-");
+                   List<Integer> size = new ArrayList<>();
+
+                   size.add(Arrays.stream(splitLevelsString).map(String::length).max(Integer::compareTo).get());
+                   size.add(splitLevelsString.length);
+
+                   widthHeight.put(levelCounter, size);
+
                    for (int i = 0; i < oneLevel.length(); i++) {
                         levelArray[i] = symbols.get(oneLevel.charAt(i));
                    }
+
                    levels.add(levelArray);
                    oneLevel.setLength(0);
+                   levelCounter++;
                }
             }
             else{
-                oneLevel.append(line);
+                oneLevel.append(line).append("-");
             }
         }
         scanner.close();
