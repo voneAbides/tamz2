@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
         <entry key="app/src/main/res/layout/list_entry_layout.xml" value="0.3489583333333333" />
+=======
+        <entry key="..\:/Users/vone/Documents/GitHub/tamz2/NetActivity_Template_2020/app/src/main/res/layout/list_entry_layout.xml" value="0.33" />
+>>>>>>> 22cddb3c106408ee4ed8ec9f1e939290a66e66be
       </map>
     </option>
   </component>
