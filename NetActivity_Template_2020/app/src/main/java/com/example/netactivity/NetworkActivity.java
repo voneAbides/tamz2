@@ -33,12 +33,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+
 import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Scanner;
 
 
 /**
@@ -213,9 +218,17 @@ public class NetworkActivity extends Activity {
             // TODO 4. Při výběru měny z listu spustit novou aktivitu, ve které bude převod z CZK do vybrané měny a naopak
             lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Entry entry = (Entry) adapterView.getItemAtPosition(i);
-                    Toast.makeText(getApplicationContext(), entry.mena, Toast.LENGTH_SHORT).show();
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    Entry entry = (Entry) adapterView.getItemAtPosition(position);
+//                    Toast.makeText(getApplicationContext(), entry.mena, Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(getApplicationContext(), CurrencyActivity.class);
+                    intent.putExtra("kod", entry.kod);
+                    intent.putExtra("mena", entry.mena);
+                    intent.putExtra("mnozstvi", entry.mnozstvi);
+                    intent.putExtra("kurz", entry.kurz);
+                    intent.putExtra("stat", entry.zeme);
+                    startActivity(intent);
                 }
             });
         }
@@ -238,6 +251,24 @@ public class NetworkActivity extends Activity {
                 stream.close();
             }
         }
+
+//        String filename = "entries.xml";
+//        String string = "Hello world!";
+//        FileOutputStream outputStream;
+//
+//        try {
+//            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+//
+//            Scanner s = new Scanner(stream).useDelimiter("\\A");
+//            String result = s.hasNext() ? s.next() : "";
+//            outputStream.write(result.getBytes());
+//            outputStream.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+
+
         return entries;
     }
 
